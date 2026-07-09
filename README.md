@@ -1,0 +1,96 @@
+```markdown
+# 🍜 메뉴픽 (MenuPick) 👋
+> **FE** - 김지현
+> **BE** - 이경민
+> **PM** - 백준하
+
+## 🍜 여러 메뉴·인원까지 맞추는 그룹 맛집 큐레이터
+
+위치와 **여러 메뉴**, **인원수**를 입력하면, AI가 후기를 대신 읽어 **"그 메뉴들이 다 되고 단체도 가능한"** 맛집 **top 3**를 근거와 함께 골라줍니다.
+지도 앱은 "장소 → 메뉴" 정방향만 지원하지만, 메뉴픽은 **"메뉴 → 장소" 역검색**을 채웁니다.
+
+---
+
+## 🎬 화면 프리뷰
+> *(진행 중: 앱 구동 화면 GIF 및 UI 스크린샷 삽입 예정)*
+
+## 🧩 1. 개요
+인원이 많고 각자 먹고 싶은 메뉴가 다른 **20대 대학생 모임**은 한 곳을 정하기 어렵고, 어렵게 정해도 그 식당이 **단체 수용이 되는지** 알기 어렵습니다.
+메뉴픽은 **위치 + 여러 메뉴 + 인원수**를 받아, AI가 리뷰를 대신 읽고 **"왜 이 집이 그 메뉴 맛집인지" 근거 문장과 함께** 상위 3곳을 추천합니다.
+근거가 부족하면 추측하지 않고 **"판단 보류"**로 정직하게 답해 환각을 방지합니다.
+
+## 🔍 2. 개발 필요성
+- 지도 앱은 **거리순·광고순 나열**만 줄 뿐, "이 근처 이 메뉴 제일 잘하는 집"이라는 **역방향 질문**에 답을 못 줍니다.
+- 그룹은 결국 후보를 하나씩 눌러 리뷰를 읽고 블로그를 서너 개 비교하며 **직접 판단하는 노동**을 반복합니다.
+- 여기에 **"여러 메뉴 동시 만족 + 단체 가능"** 조건까지 더해지면 사람이 손으로 맞추기 사실상 불가능합니다.
+- → 이 **읽고 판단하는 노동을 AI가 대신**하고, 그룹 조건(다중 메뉴·인원)에 최적화한 서비스가 필요합니다.
+
+## 🎯 3. 세부 목표
+- **다중 메뉴 매칭 추천**: 여러 메뉴를 각각 채점해, 메뉴별 1등·2등을 라운드로빈으로 배치(한 메뉴가 결과를 독점하지 않게 구성)
+- **인원수·단체 가능**: 인원수를 설정하고, '단체 이용 가능' 매장을 우선 노출(크롤 확장)
+- **근거 기반 AI 추천**: OpenAI로 추천 이유 생성 + 리뷰 인용, 근거 부족 시 판단 보류
+- **나만의 맛집 축적**: 스크랩 → 방문 후기·별점 기록(CRUD)
+- **데이터 자가증식**: 크라우드소싱 매장 등록 + 포인트제
+
+## 🧠 4. 주요 기능
+
+### 4.1 위치 + 다중 메뉴 + 인원 검색
+평소처럼 위치를 잡고(현위치·검색·지도), **메뉴를 여러 개 추가**하고 **인원수(−/+)** 를 정하면 반경 내 후보 식당이 지도 마커로 먼저 뜹니다.
+- **적용 기술**: React 2단계 플로우 · Kakao 로컬 API(장소검색·좌표변환) · Leaflet 지도
+
+### 4.2 AI 다중 메뉴 추천 (라운드로빈 + 판단 보류)
+여러 메뉴를 **각각 랭킹**해 라운드로빈으로 top 3를 구성 → 그룹의 모든 메뉴가 공평히 대표됩니다. AI가 각 추천의 **이유 문장과 근거 인용**을 생성하고, 근거가 약하면 **판단 보류**로 분류합니다.
+- **적용 기술**: 결정론 신호 스코어링 + OpenAI gpt-4o-mini(이유 생성) · 실패 시 자동 폴백
+
+### 4.3 근거 투명성 (환각 방지)
+추천 카드마다 **"'치킨' 관련 리뷰 115건 확인됨"**처럼 근거 수를 노출하고, top 3에 못 든 대안은 **"아쉽게 밀린 곳"**으로 정직하게 보여줍니다.
+- **적용 기술**: 리뷰 메뉴태그 집계(네이버 플레이스 크롤) · 근거 스니펫 저장(원문 미저장)
+
+### 4.4 스크랩북 · 검색 기록 (CRUD)
+마음에 든 집을 **스크랩**하고, 방문 후 **별점·한줄평**을 남겨 나만의 검증된 맛집 리스트를 쌓습니다. 과거 검색 기록도 다시 볼 수 있습니다.
+- **적용 기술**: Spring Data JPA CRUD · JWT 인증
+
+### 4.5 크라우드소싱 등록 + 포인트
+지도에 **실재하는 매장만** 등록(유령매장 차단)하고, 등록/질의에 따라 포인트를 적립·차감해 데이터가 스스로 확장되게 합니다.
+- **적용 기술**: place_id 기반 매장 검증 · `@Transactional` 포인트 원자 처리
+
+## 🛠 5. 기술 스택
+
+### Frontend
+<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black"/> <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white"/> <img src="https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=Leaflet&logoColor=white"/>
+
+### Backend
+<img src="https://img.shields.io/badge/Spring_Boot_3-6DB33F?style=for-the-badge&logo=Spring-Boot&logoColor=white"/> <img src="https://img.shields.io/badge/Spring_Data_JPA-6DB33F?style=for-the-badge&logo=Spring&logoColor=white"/> <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white"/>
+
+### Database & AI
+<img src="https://img.shields.io/badge/H2_Database-003545?style=for-the-badge"/> <img src="https://img.shields.io/badge/OpenAI_gpt--4o--mini-412991?style=for-the-badge&logo=OpenAI&logoColor=white"/>
+
+### Tools & Collaboration
+<img src="https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=Playwright&logoColor=white"/> <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/> <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"/>
+
+## 🗺 6. 아키텍처 (요약)
+
+```text
+React (5173) ──▶ Spring Boot (8080)
+  Kakao/Leaflet        JwtFilter → Controller → Service → JPA → H2
+  다중 메뉴·인원                      └ AiService: Mock(신호계산) ⇄ OpenAI(gpt-4o-mini)
+
+```
+
+* 데이터는 **배치로 미리 수집해 DB에 적재**하고 서비스는 **캐시에서 서빙** → 시연 중 차단·지연으로 데모가 깨지지 않습니다.
+
+## ✨ 7. 기대효과
+
+* **학생 그룹**: "다 같이 뭐 먹지?"를 몇 초 만에 해결 + 단체 가능 여부까지 확인
+* **식당**: 메뉴 단위 평판이 정확히 드러나 실제 강점으로 방문 유입
+* **팀**: Open API·AI·CRUD·협업을 아우르는 풀스택 경험 + 근거 기반 설계
+
+## 🏷️ 8. 키워드
+
+`#메뉴역검색` `#그룹맛집` `#다중메뉴` `#단체가능` `#AI추천` `#판단보류` `#근거기반` `#대학생` `#SpringBoot` `#React`
+
+---
+
+## 🚀 9. 실행 방법 (Getting Started)
+
+> *해당 파트는 개발 파트에서 환경 세팅 및 빌드 가이드를 작성해 주세요.*
