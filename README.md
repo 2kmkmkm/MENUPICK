@@ -78,9 +78,12 @@
 
 ## 🗺 6. 아키텍처 (요약)
 
+```text
 React (5173) ──▶ Spring Boot (8080)
-Kakao/Leaflet        JwtFilter → Controller → Service → JPA → H2
-다중 메뉴·인원                      └ AiService: Mock(신호계산) ⇄ OpenAI(gpt-4o-mini)
+  Kakao/Leaflet        JwtFilter → Controller → Service → JPA → H2
+  다중 메뉴·인원                      └ AiService: Mock(신호계산) ⇄ OpenAI(gpt-4o-mini)
+
+```
 
 * 데이터는 **배치로 미리 수집해 DB에 적재**하고 서비스는 **캐시에서 서빙** → 시연 중 차단·지연으로 데모가 깨지지 않습니다.
 
@@ -98,4 +101,4 @@ Kakao/Leaflet        JwtFilter → Controller → Service → JPA → H2
 
 ## 🚀 9. 실행 방법 (Getting Started)
 
-> *해당 파트는 개발 파트에서 환경 세팅 및 빌드 가이드를 작성해 주세요.*
+> *해당 파트는 개발 파트에서 환경 세팅 및 빌드 가이드를 작성해 주세요!*
