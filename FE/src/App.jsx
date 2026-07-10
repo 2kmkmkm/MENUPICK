@@ -1,11 +1,14 @@
-import Map from './Map';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from './Pages/Login';
 
 function App() {
   return (
-    <div>
-      <h1>메뉴픽</h1>
-      <Map />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
