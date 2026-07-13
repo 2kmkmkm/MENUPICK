@@ -6,9 +6,14 @@ const TABS = [
   { label: '기록', path: '/history' },
 ];
 
-function BottomNav({ onLogout }) {
+function BottomNav() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    navigate('/login');
+  };
 
   return (
     <div
@@ -34,7 +39,7 @@ function BottomNav({ onLogout }) {
         </span>
       ))}
       <span
-        onClick={onLogout}
+        onClick={handleLogout}
         style={{ fontSize: 10, cursor: 'pointer', color: '#8A7E76' }}
       >
         로그아웃

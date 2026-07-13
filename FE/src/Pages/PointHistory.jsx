@@ -3,9 +3,9 @@ import PointHistoryItem from '../Components/PointHistoryItem';
 import BottomNav from '../Components/BottomNav';
 
 const MOCK_HISTORY = [
-  { label: '리뷰 적립 · 신라방마라탕', date: '', delta: 1 },
-  { label: 'AI 추천 사용', date: '', delta: -3 },
-  { label: '떡볶이-단골매장 등록', date: '', delta: 5 },
+  { reason: '리뷰 적립 · 신라방마라탕', date: '', delta: 1 },
+  { reason: 'AI 추천 사용', date: '', delta: -3 },
+  { reason: '떡볶이-단골매장 등록', date: '', delta: 5 },
 ];
 
 function PointHistory({ points = 12 }) {
@@ -33,7 +33,7 @@ function PointHistory({ points = 12 }) {
 
       <div style={{ marginTop: 4 }}>
         {MOCK_HISTORY.map((item, i) => (
-          <PointHistoryItem key={i} label={item.label} date={item.date} delta={item.delta} />
+          <PointHistoryItem key={i} reason={item.reason} date={item.date} delta={item.delta} />
         ))}
       </div>
 

@@ -1,4 +1,4 @@
-function PointHistoryItem({ label, date, delta }) {
+function PointHistoryItem({ reason, date, delta }) {
   const positive = delta > 0;
   return (
     <div
@@ -11,7 +11,7 @@ function PointHistoryItem({ label, date, delta }) {
       }}
     >
       <div>
-        <p style={{ fontSize: 13, color: '#2B2320', margin: 0 }}>{label}</p>
+        <p style={{ fontSize: 13, color: '#2B2320', margin: 0 }}>{reason}</p>
         <p style={{ fontSize: 11, color: '#8A7E76', margin: '2px 0 0' }}>{date}</p>
       </div>
       <span style={{ fontSize: 13, fontWeight: 500, color: positive ? '#FF7A00' : '#8A7E76' }}>

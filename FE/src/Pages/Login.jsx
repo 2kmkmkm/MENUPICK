@@ -1,15 +1,26 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
+import api from '../api';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // TODO: 백엔드 로그인 API 연동 (지금은 Mock으로 바로 검색화면 이동)
-    navigate('/search');
+  const handleLogin = async () => {
+    try {
+      setError('');
+      const res = await api.post('/api/v1/auth/login', { email, password });
+      const token = res.data?.data?.accessToken;
+      if (token) {
+        localStorage.setItem('accessToken', token);
+      }
+      navigate('/search');
+    } catch (err) {
+      setError('로그인에 실패했어요. 이메일/비밀번호를 확인해주세요');
+    }
   };
 
   return (
@@ -72,6 +83,10 @@ function Login() {
           }}
         />
       </div>
+
+      {error && (
+        <p style={{ fontSize: 12, color: '#C0392B', margin: 0 }}>{error}</p>
+      )}
 
       <div style={{ marginTop: 6 }}>
         <Button onClick={handleLogin}>로그인</Button>
