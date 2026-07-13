@@ -9,7 +9,7 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:menupick;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:file:./data/menupick;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
     username: sa
     password:
 
