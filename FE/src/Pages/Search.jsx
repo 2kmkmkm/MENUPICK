@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
 import MenuChip from '../Components/MenuChip';
@@ -9,6 +9,23 @@ import Map from '../Map';
 const POPULAR_MENUS = ['해장국', '김치찌개', '삼겹살', '돈까스', '국밥'];
 const DEFAULT_LAT = 37.5651;
 const DEFAULT_LNG = 127.0165;
+const KAKAO_KEY = import.meta.env.VITE_KAKAO_MAP_KEY;
+
+function reverseGeocode(lat, lng, callback) {
+  if (!window.kakao || !window.kakao.maps || !window.kakao.maps.services) {
+    callback(null);
+    return;
+  }
+  const geocoder = new window.kakao.maps.services.Geocoder();
+  geocoder.coord2RegionCode(lng, lat, (result, status) => {
+    if (status === window.kakao.maps.services.Status.OK) {
+      const region = result.find((r) => r.region_type === 'H') || result[0];
+      callback(region ? region.region_3depth_name : null);
+    } else {
+      callback(null);
+    }
+  });
+}
 
 function Search() {
   const [selectedMenus, setSelectedMenus] = useState([]);
@@ -16,7 +33,14 @@ function Search() {
   const [headcount, setHeadcount] = useState(4);
   const [coords, setCoords] = useState({ lat: DEFAULT_LAT, lng: DEFAULT_LNG });
   const [locating, setLocating] = useState(false);
+  const [regionName, setRegionName] = useState('신당동');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    reverseGeocode(coords.lat, coords.lng, (name) => {
+      if (name) setRegionName(name);
+    });
+  }, [coords]);
 
   const addMenu = (menu) => {
     const trimmed = menu.trim();
@@ -75,7 +99,7 @@ function Search() {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{ fontSize: 12, color: '#8A7E76' }}>신당동 인근에서 찾는 중</span>
+        <span style={{ fontSize: 12, color: '#8A7E76' }}>{regionName} 인근에서 찾는 중</span>
         <PointBadge points={12} />
       </div>
 

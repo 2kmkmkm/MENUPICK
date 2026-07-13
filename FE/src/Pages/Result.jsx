@@ -1,27 +1,29 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import RestaurantCard from '../Components/RestaurantCard';
 import Map from '../Map';
 import BottomNav from '../Components/BottomNav';
-import { useNavigate } from 'react-router-dom';
 
 const MOCK_RESULTS = [
   {
     id: 1,
     rank: 1,
     name: '신당동 화끈이네',
+    matchedMenus: ['치킨', '마라탕'],
     groupOk: true,
-    reason: '치킨·마라탕 후기 모두 반복 언급됨',
+    reason: '치킨·마라탕 후기 모두 반복 언급됨, 두 메뉴 다 평이 좋음',
     quote: '매콤한 마라탕이 진하다',
     evidenceCount: 12,
   },
   {
     id: 2,
     rank: 2,
-    name: '신라방마라탕',
-    groupOk: false,
-    reason: '마라탕 언급 다수, 치킨 정보는 부족',
-    quote: '',
-    evidenceCount: 5,
+    name: '한방 통닭구이 신당',
+    matchedMenus: ['치킨'],
+    groupOk: true,
+    reason: '치킨 후기 다수, 바삭한 튀김옷 언급 많음',
+    quote: '겉바속촉 치킨',
+    evidenceCount: 8,
   },
 ];
 
@@ -38,7 +40,6 @@ function Result() {
   };
 
   const handleLogout = () => {
-    // TODO: 로그아웃 처리 (토큰 삭제 등)
     navigate('/login');
   };
 
@@ -65,6 +66,7 @@ function Result() {
           key={r.id}
           rank={r.rank}
           name={r.name}
+          matchedMenus={r.matchedMenus}
           groupOk={r.groupOk}
           reason={r.reason}
           quote={r.quote}

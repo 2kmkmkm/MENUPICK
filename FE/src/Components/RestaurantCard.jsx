@@ -1,4 +1,4 @@
-function RestaurantCard({ rank, name, groupOk, reason, quote, evidenceCount, scraped = false, onScrapToggle }) {
+function RestaurantCard({ rank, name, matchedMenus = [], groupOk, reason, quote, evidenceCount, scraped = false, onScrapToggle }) {
   return (
     <div
       style={{
@@ -23,7 +23,7 @@ function RestaurantCard({ rank, name, groupOk, reason, quote, evidenceCount, scr
         {scraped ? '♥' : '♡'}
       </span>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
         <span
           style={{
             background: rank === 1 ? '#FF7A00' : '#8A7E76',
@@ -41,14 +41,28 @@ function RestaurantCard({ rank, name, groupOk, reason, quote, evidenceCount, scr
           {rank}
         </span>
         <span style={{ fontSize: 14, fontWeight: 500, color: '#2B2320' }}>{name}</span>
-        {groupOk && (
+        {matchedMenus.map((menu) => (
           <span
+            key={menu}
             style={{
               fontSize: 11,
               background: '#FFF0E0',
               color: '#B35400',
-              padding: '2px 6px',
-              borderRadius: 6,
+              padding: '2px 8px',
+              borderRadius: 8,
+            }}
+          >
+            {menu}
+          </span>
+        ))}
+        {groupOk && (
+          <span
+            style={{
+              fontSize: 11,
+              background: '#F0E4D8',
+              color: '#8A7E76',
+              padding: '2px 8px',
+              borderRadius: 8,
             }}
           >
             단체가능

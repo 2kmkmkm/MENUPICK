@@ -1,22 +1,33 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const STEPS = [
-  { label: '주변 후보 식당 정리', done: true },
-  { label: '최근 후기 읽는 중', done: true },
-  { label: '근거 모으는 중', active: true },
-  { label: '상위 3곳 고르는 중', done: false },
+  '주변 후보 식당 정리',
+  '최근 후기 읽는 중',
+  '근거 모으는 중',
+  '상위 3곳 고르는 중',
 ];
 
 function Loading() {
+  const [stepIndex, setStepIndex] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // TODO: 백엔드 /api/v1/recommendations 응답 오면 결과 화면으로 이동
-    const timer = setTimeout(() => {
+    // TODO: 여기서 실제 axios.post('/api/v1/recommendations', {...}) 호출
+    // 응답 오면 결과 데이터를 갖고 /result로 navigate, 스텝 타이머는 최소 연출 시간용
+
+    const stepTimer = setInterval(() => {
+      setStepIndex((prev) => (prev < STEPS.length - 1 ? prev + 1 : prev));
+    }, 700);
+
+    const doneTimer = setTimeout(() => {
       navigate('/result');
-    }, 1800);
-    return () => clearTimeout(timer);
+    }, STEPS.length * 700 + 400);
+
+    return () => {
+      clearInterval(stepTimer);
+      clearTimeout(doneTimer);
+    };
   }, [navigate]);
 
   return (
@@ -63,22 +74,26 @@ function Loading() {
       </span>
 
       <div style={{ width: '100%', maxWidth: 280, display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {STEPS.map((step, i) => (
-          <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <span style={{ color: step.done || step.active ? '#FF7A00' : '#8A7E76', fontSize: 14 }}>
-              {step.done ? '✓' : step.active ? '●' : '○'}
-            </span>
-            <span
-              style={{
-                fontSize: 12,
-                color: step.active ? '#2B2320' : '#8A7E76',
-                fontWeight: step.active ? 500 : 400,
-              }}
-            >
-              {step.label}
-            </span>
-          </div>
-        ))}
+        {STEPS.map((label, i) => {
+          const done = i < stepIndex;
+          const active = i === stepIndex;
+          return (
+            <div key={label} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <span style={{ color: done || active ? '#FF7A00' : '#8A7E76', fontSize: 14 }}>
+                {done ? '✓' : active ? '●' : '○'}
+              </span>
+              <span
+                style={{
+                  fontSize: 12,
+                  color: active ? '#2B2320' : '#8A7E76',
+                  fontWeight: active ? 500 : 400,
+                }}
+              >
+                {label}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
