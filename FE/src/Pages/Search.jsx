@@ -86,6 +86,7 @@ function Search() {
         lng: coords.lng,
         regionName,
       },
+      replace: true,
     });
   };
 

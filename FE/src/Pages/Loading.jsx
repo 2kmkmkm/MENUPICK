@@ -23,7 +23,7 @@ function Loading() {
     }, 700);
 
     const doneTimer = setTimeout(() => {
-      navigate('/result', { state: searchParams });
+      navigate('/result', { state: searchParams, replace: true });
     }, STEPS.length * 700 + 400);
 
     return () => {
