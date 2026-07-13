@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const STEPS = [
   '주변 후보 식당 정리',
@@ -11,17 +11,19 @@ const STEPS = [
 function Loading() {
   const [stepIndex, setStepIndex] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = location.state || {};
 
   useEffect(() => {
-    // TODO: 여기서 실제 axios.post('/api/v1/recommendations', {...}) 호출
-    // 응답 오면 결과 데이터를 갖고 /result로 navigate, 스텝 타이머는 최소 연출 시간용
+    // TODO: 여기서 실제 axios.post('/api/v1/recommendations', searchParams) 호출
+    // 응답 오면 결과 데이터를 state로 실어서 /result로 navigate
 
     const stepTimer = setInterval(() => {
       setStepIndex((prev) => (prev < STEPS.length - 1 ? prev + 1 : prev));
     }, 700);
 
     const doneTimer = setTimeout(() => {
-      navigate('/result');
+      navigate('/result', { state: searchParams });
     }, STEPS.length * 700 + 400);
 
     return () => {

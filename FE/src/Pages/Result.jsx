@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import RestaurantCard from '../Components/RestaurantCard';
 import Map from '../Map';
 import BottomNav from '../Components/BottomNav';
@@ -8,7 +8,7 @@ const MOCK_RESULTS = [
   {
     id: 1,
     rank: 1,
-    name: '신당동 화끈이네',
+    name: '신당동 떡볶이',
     matchedMenus: ['치킨', '마라탕'],
     groupOk: true,
     reason: '치킨·마라탕 후기 모두 반복 언급됨, 두 메뉴 다 평이 좋음',
@@ -32,6 +32,8 @@ const ON_HOLD = [{ id: 3, name: '동대문 마라궁' }];
 function Result() {
   const [scrapedIds, setScrapedIds] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = location.state || {};
 
   const toggleScrap = (id) => {
     setScrapedIds((prev) =>
@@ -58,8 +60,14 @@ function Result() {
       <p style={{ fontSize: 17, fontWeight: 500, color: '#2B2320', margin: '0 0 2px' }}>
         검색 결과
       </p>
+      {searchParams.regionName && (
+        <p style={{ fontSize: 11, color: '#8A7E76', margin: '0 0 2px' }}>
+          {searchParams.regionName} · {searchParams.headcount}명 ·{' '}
+          {(searchParams.menus || []).join(', ')}
+        </p>
+      )}
 
-      <Map height={90} />
+      <Map lat={searchParams.lat} lng={searchParams.lng} height={90} />
 
       {MOCK_RESULTS.map((r) => (
         <RestaurantCard

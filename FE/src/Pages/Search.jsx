@@ -9,7 +9,6 @@ import Map from '../Map';
 const POPULAR_MENUS = ['해장국', '김치찌개', '삼겹살', '돈까스', '국밥'];
 const DEFAULT_LAT = 37.5651;
 const DEFAULT_LNG = 127.0165;
-const KAKAO_KEY = import.meta.env.VITE_KAKAO_MAP_KEY;
 
 function reverseGeocode(lat, lng, callback) {
   if (!window.kakao || !window.kakao.maps || !window.kakao.maps.services) {
@@ -79,7 +78,15 @@ function Search() {
   };
 
   const handleSearch = () => {
-    navigate('/loading');
+    navigate('/loading', {
+      state: {
+        menus: selectedMenus,
+        headcount,
+        lat: coords.lat,
+        lng: coords.lng,
+        regionName,
+      },
+    });
   };
 
   const handleLogout = () => {
