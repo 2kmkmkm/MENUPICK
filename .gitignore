@@ -1,3 +1,6 @@
 # H2 Database 파일 모드 데이터 폴더 제외
 /data/
 *.db
+
+# IntelliJ 설정 파일
+/.idea/
