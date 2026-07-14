@@ -25,13 +25,13 @@ public class User {
     private String name;
 
     @Column(nullable = false)
-    private int pointBalance = 0;
+    private int pointBalance;
 
     @Builder
     public User(String email, String password, String name, int pointBalance) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.pointBalance = pointBalance;
+        this.pointBalance = 12;
     }
 }
