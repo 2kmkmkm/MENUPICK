@@ -1,21 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
+import api from '../api';
 
 function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (password !== passwordCheck) {
-      alert('비밀번호가 일치하지 않습니다');
+      setError('비밀번호가 일치하지 않습니다');
       return;
     }
-    // TODO: 백엔드 회원가입 API 연동 (지금은 Mock으로 바로 검색화면 이동)
-    navigate('/search');
+    try {
+      setError('');
+      await api.post('/api/v1/auth/signup', { name, email, password });
+      navigate('/login');
+    } catch (err) {
+      setError('회원가입에 실패했어요. 입력 내용을 확인해주세요');
+    }
   };
 
   const inputStyle = {
@@ -85,6 +92,10 @@ function Signup() {
           style={inputStyle}
         />
       </div>
+
+      {error && (
+        <p style={{ fontSize: 12, color: '#C0392B', margin: 0 }}>{error}</p>
+      )}
 
       <div style={{ marginTop: 6 }}>
         <Button onClick={handleSignup}>가입하기</Button>

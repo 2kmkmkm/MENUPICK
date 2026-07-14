@@ -33,6 +33,7 @@ function Search() {
   const [coords, setCoords] = useState({ lat: DEFAULT_LAT, lng: DEFAULT_LNG });
   const [locating, setLocating] = useState(false);
   const [regionName, setRegionName] = useState('신당동');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +46,7 @@ function Search() {
     const trimmed = menu.trim();
     if (trimmed && !selectedMenus.includes(trimmed)) {
       setSelectedMenus([...selectedMenus, trimmed]);
+      setError('');
     }
     setMenuInput('');
   };
@@ -78,6 +80,10 @@ function Search() {
   };
 
   const handleSearch = () => {
+    if (selectedMenus.length === 0) {
+      setError('메뉴를 하나 이상 선택해주세요');
+      return;
+    }
     navigate('/loading', {
       state: {
         menus: selectedMenus,
@@ -217,6 +223,10 @@ function Search() {
           </span>
         </div>
       </div>
+
+      {error && (
+        <p style={{ fontSize: 12, color: '#C0392B', margin: 0 }}>{error}</p>
+      )}
 
       <div style={{ marginTop: 'auto' }}>
         <Button onClick={handleSearch}>AI 추천 받기</Button>
