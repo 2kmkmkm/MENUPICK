@@ -1,4 +1,4 @@
-function RestaurantCard({ rank, name, matchedMenus = [], groupOk, reason, quote, evidenceCount, scraped = false, onScrapToggle }) {
+function RestaurantCard({ rankNo, name, matchedMenus = [], groupOk, reason, quote, evidenceCount, scraped = false, onScrapToggle }) {
   return (
     <div
       style={{
@@ -26,7 +26,7 @@ function RestaurantCard({ rank, name, matchedMenus = [], groupOk, reason, quote,
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
         <span
           style={{
-            background: rank === 1 ? '#FF7A00' : '#8A7E76',
+            background: rankNo === 1 ? '#FF7A00' : '#8A7E76',
             color: '#fff',
             fontSize: 11,
             fontWeight: 500,
@@ -38,7 +38,7 @@ function RestaurantCard({ rank, name, matchedMenus = [], groupOk, reason, quote,
             justifyContent: 'center',
           }}
         >
-          {rank}
+          {rankNo}
         </span>
         <span style={{ fontSize: 14, fontWeight: 500, color: '#2B2320' }}>{name}</span>
         {matchedMenus.map((menu) => (

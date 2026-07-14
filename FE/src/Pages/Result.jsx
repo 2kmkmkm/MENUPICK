@@ -7,7 +7,7 @@ import BottomNav from '../Components/BottomNav';
 const MOCK_RESULTS = [
   {
     id: 1,
-    rank: 1,
+    rankNo: 1,
     name: '신당동 떡볶이',
     matchedMenus: ['치킨', '마라탕'],
     groupOk: true,
@@ -17,7 +17,7 @@ const MOCK_RESULTS = [
   },
   {
     id: 2,
-    rank: 2,
+    rankNo: 2,
     name: '한방 통닭구이 신당',
     matchedMenus: ['치킨'],
     groupOk: true,
@@ -77,7 +77,7 @@ function Result() {
       {MOCK_RESULTS.map((r) => (
         <RestaurantCard
           key={r.id}
-          rank={r.rank}
+          rankNo={r.rankNo}
           name={r.name}
           matchedMenus={r.matchedMenus}
           groupOk={r.groupOk}
