@@ -35,13 +35,13 @@ public class Restaurant {
     private String placeUrl;
 
     @Column(nullable = false)
-    private String bizStatus = "영업";
+    private String bizStatus;
 
     @Column(nullable = false)
-    private boolean isActive = true;
+    private Boolean isActive;
 
     @Column(nullable = false)
-    private boolean groupOk = false;
+    private Boolean groupOk;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MenuSignal> menuSignals = new ArrayList<>();
@@ -49,7 +49,7 @@ public class Restaurant {
     @Builder
     public Restaurant(String name, String nameNorm, String category, String roadAddr, String jibunAddr,
                       String regionCode, double lat, double lng, String placeId, String placeUrl,
-                      String bizStatus, boolean isActive, boolean groupOk) {
+                      String bizStatus, Boolean isActive, Boolean groupOk) {
         this.name = name;
         this.nameNorm = nameNorm;
         this.category = category;
@@ -60,8 +60,8 @@ public class Restaurant {
         this.lng = lng;
         this.placeId = placeId;
         this.placeUrl = placeUrl;
-        this.bizStatus = bizStatus;
-        this.isActive = isActive;
-        this.groupOk = groupOk;
+        this.bizStatus = (bizStatus != null) ? bizStatus : "영업";
+        this.isActive = (isActive != null) ? isActive : true;
+        this.groupOk = (groupOk != null) ? groupOk : false;
     }
 }

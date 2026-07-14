@@ -40,7 +40,7 @@ public class Scrap {
     private Integer rating;
 
     @Column(nullable = false)
-    private boolean visited = false;
+    private boolean visited;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -55,7 +55,7 @@ public class Scrap {
 
     @Builder
     public Scrap(User user, Restaurant restaurant, String name, String address,
-                 List<String> menu, String memo, Integer rating, boolean visited) {
+                 List<String> menu, String memo, Integer rating) {
         this.user = user;
         this.restaurant = restaurant;
         this.name = name;
@@ -63,7 +63,7 @@ public class Scrap {
         this.menu = menu;
         this.memo = memo;
         this.rating = rating;
-        this.visited = visited;
-        this.createdAt = LocalDateTime.now(); // 생성 시 현재 시간 자동 기록
+        this.visited = false;
+        this.createdAt = LocalDateTime.now();
     }
 }
