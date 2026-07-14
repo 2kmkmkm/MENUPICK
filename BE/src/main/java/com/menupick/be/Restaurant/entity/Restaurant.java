@@ -1,11 +1,8 @@
 package com.menupick.be.Restaurant.entity;
 
-import com.menupick.be.menuSignal.entity.MenuSignal;
+import com.menupick.be.RestaurantMenuSignal.entity.RestaurantMenuSignal;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,42 +24,44 @@ public class Restaurant {
     private String regionCode;
 
     @Column(nullable = false)
-    private double lat;
+    private Double lat;
 
     @Column(nullable = false)
-    private double lng;
+    private Double lng;
 
     private String placeId;
     private String placeUrl;
 
     @Column(nullable = false)
-    private String bizStatus;
+    private String bizStatus = "영업";
 
     @Column(nullable = false)
-    private Boolean isActive;
+    private boolean isActive = true;
 
+    @Setter
     @Column(nullable = false)
-    private Boolean groupOk;
+    private boolean groupOk = false;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MenuSignal> menuSignals = new ArrayList<>();
+    private List<RestaurantMenuSignal> signals = new ArrayList<>();
 
     @Builder
-    public Restaurant(String name, String nameNorm, String category, String roadAddr, String jibunAddr,
-                      String regionCode, double lat, double lng, String placeId, String placeUrl,
-                      String bizStatus, Boolean isActive, Boolean groupOk) {
+    public Restaurant(String name, String category, String roadAddr, double lat, double lng) {
         this.name = name;
-        this.nameNorm = nameNorm;
+        this.nameNorm = name == null ? null : name.toLowerCase().replaceAll("\\s+", "");
         this.category = category;
         this.roadAddr = roadAddr;
-        this.jibunAddr = jibunAddr;
-        this.regionCode = regionCode;
         this.lat = lat;
         this.lng = lng;
-        this.placeId = placeId;
-        this.placeUrl = placeUrl;
-        this.bizStatus = (bizStatus != null) ? bizStatus : "영업";
-        this.isActive = (isActive != null) ? isActive : true;
-        this.groupOk = (groupOk != null) ? groupOk : false;
     }
+
+    public void addSignal(RestaurantMenuSignal signal) {
+        signals.add(signal);
+        signal.setRestaurant(this);
+    }
+
+    public String displayAddress() {
+        return roadAddr != null ? roadAddr : jibunAddr;
+    }
+
 }

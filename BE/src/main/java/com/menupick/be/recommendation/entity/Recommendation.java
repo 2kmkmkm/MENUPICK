@@ -1,6 +1,7 @@
 package com.menupick.be.recommendation.entity;
 
 import com.menupick.be.common.util.StringListConverter;
+import com.menupick.be.recommendedPlace.entity.RecommendedPlace;
 import com.menupick.be.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -26,28 +27,38 @@ public class Recommendation {
     private List<String> menu;
 
     @Column(nullable = false)
-    private double lat;
+    private Double lat;
 
     @Column(nullable = false)
-    private double lng;
+    private Double lng;
+
+    @Column(nullable = false)
+    private String address;
 
     @Column(nullable = false)
     private Integer radius;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Builder
-    public Recommendation(User user, List<String> menu, double lat, double lng, int radius) {
+    @OneToMany(mappedBy = "recommendation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecommendedPlace> places = new ArrayList<>();
+
+    public Recommendation(User user, List<String> menu, Double lat, Double lng, Integer radius, String address) {
         this.user = user;
-        this.menu = menu != null ? menu : new ArrayList<>();
+        this.menu = menu;
         this.lat = lat;
         this.lng = lng;
         this.radius = radius;
-        this.createdAt = LocalDateTime.now();
+        this.address = address;
+    }
+
+    public void addPlace(RecommendedPlace place) {
+        places.add(place);
+        place.setRecommendation(this);
     }
 }

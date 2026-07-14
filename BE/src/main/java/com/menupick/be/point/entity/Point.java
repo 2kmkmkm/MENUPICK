@@ -22,7 +22,7 @@ public class Point {
     private String reason;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="user_id", nullable = false)
@@ -33,6 +33,5 @@ public class Point {
         this.user = user;
         this.delta = delta;
         this.reason = reason;
-        this.createdAt = LocalDateTime.now();
     }
 }

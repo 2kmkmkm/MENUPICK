@@ -36,6 +36,7 @@ spring:
       chat:
         model: gpt-4o-mini
 
+
 menupick:
   cors:
     allowed-origin: http://localhost:5173
@@ -49,7 +50,6 @@ menupick:
     rest-api-key: ${KAKAO_REST_API_KEY}
 
   ai: ${MENUPICK_AI:mock}
-
 
 logging:
   level:

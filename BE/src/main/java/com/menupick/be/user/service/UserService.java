@@ -1,5 +1,7 @@
 package com.menupick.be.user.service;
 
+import com.menupick.be.common.exception.ApiException;
+import com.menupick.be.common.exception.ErrorCode;
 import com.menupick.be.common.util.JwtTokenProvider;
 import com.menupick.be.user.dto.UserDTO;
 import com.menupick.be.user.dto.UserDTO.LoginRequest;
@@ -24,7 +26,7 @@ public class UserService {
     public void signup(SignUpRequest request) {
         // 이메일 중복 검사
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw new ApiException(ErrorCode.DUPLICATE_EMAIL);
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -43,10 +45,10 @@ public class UserService {
     public LoginResponse login(LoginRequest request) {
         // 이메일로 유저 존재 여부 확인
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일입니다."));
+                .orElseThrow(() -> new ApiException(ErrorCode.LOGIN_FAILED));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new ApiException(ErrorCode.LOGIN_FAILED);
         }
 
         String token = jwtTokenProvider.createAccessToken(user.getEmail());

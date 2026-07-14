@@ -1,17 +1,14 @@
-package com.menupick.be.menuSignal.entity;
+package com.menupick.be.RestaurantMenuSignal.entity;
 
 import com.menupick.be.Restaurant.entity.Restaurant;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "restaurant_menu_signal")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MenuSignal {
+public class RestaurantMenuSignal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,25 +18,25 @@ public class MenuSignal {
 
     private Integer mentionCount;
 
-    private double sentiment;
+    private Double sentiment;
 
     @Column(length = 500)
     private String snippet;
 
     private String sourceLink;
 
+    @Column(nullable = false)
+    private boolean userContributed = false;
+
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
     @Builder
-    public MenuSignal(Restaurant restaurant, String menu, int mentionCount,
-                                double sentiment, String snippet, String sourceLink) {
-        this.restaurant = restaurant;
+    public RestaurantMenuSignal(String menu, int mentionCount, String snippet) {
         this.menu = menu;
         this.mentionCount = mentionCount;
-        this.sentiment = sentiment;
         this.snippet = snippet;
-        this.sourceLink = sourceLink;
     }
 }
