@@ -28,7 +28,7 @@ public class User {
     private int pointBalance;
 
     @Builder
-    public User(String email, String password, String name, int pointBalance) {
+    public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
