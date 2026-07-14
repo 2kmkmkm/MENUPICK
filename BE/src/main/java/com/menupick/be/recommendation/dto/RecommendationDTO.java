@@ -30,7 +30,7 @@ public class RecommendationDTO {
         private Long restaurantId;
         private String name;
         private String address;
-        private String groupOk;
+        private Boolean groupOk;
 
         // [recommendation_restaurant] 매핑 테이블에서 가져오는 AI 추천 정보
         private Integer rankNo;
