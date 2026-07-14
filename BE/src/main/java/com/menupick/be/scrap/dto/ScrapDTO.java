@@ -10,7 +10,7 @@ public class ScrapDTO {
     @Getter
     @Builder
     public static class ScrapResponse {
-        private boolean isScraped;
+        private Boolean isScraped;
     }
 
     // 2. 스크랩한 맛집 전체 리스트 조회 (백엔드 -> 프론트)
@@ -24,9 +24,9 @@ public class ScrapDTO {
     @Builder
     public static class ScrapInfo {
         private Long restaurantId;
-        private List<String> menus;
-        private String restaurantName;
-        private String restaurantAddress;
+        private List<String> menu;
+        private String name;
+        private String address;
         private String memo;
         private Integer rating;
         private boolean visited;

@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -60,7 +61,7 @@ public class Scrap {
         this.restaurant = restaurant;
         this.name = name;
         this.address = address;
-        this.menu = menu;
+        this.menu = (menu != null) ? menu : new ArrayList<>();
         this.memo = memo;
         this.rating = rating;
         this.visited = false;

@@ -28,7 +28,6 @@ public class RecommendedPlace {
     private String reason;
 
     @Convert(converter = StringListConverter.class)
-    @Column(columnDefinition = "TEXT")
     private List<String> quote = new ArrayList<>();
 
     private Integer evidenceCount;

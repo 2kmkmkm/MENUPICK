@@ -19,16 +19,17 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
-
     private String nameNorm;
     private String category;
     private String roadAddr;
     private String jibunAddr;
     private String regionCode;
 
+    @Column(nullable = false)
     private double lat;
+
+    @Column(nullable = false)
     private double lng;
 
     private String placeId;

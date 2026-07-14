@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,10 +32,7 @@ public class Recommendation {
     private double lng;
 
     @Column(nullable = false)
-    private int radius;
-
-    @Column(nullable = false)
-    private String status = "DONE";
+    private Integer radius;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -44,13 +42,12 @@ public class Recommendation {
     private User user;
 
     @Builder
-    public Recommendation(User user, List<String> menu, double lat, double lng, int radius, String status) {
+    public Recommendation(User user, List<String> menu, double lat, double lng, int radius) {
         this.user = user;
-        this.menu = menu;
+        this.menu = menu != null ? menu : new ArrayList<>();
         this.lat = lat;
         this.lng = lng;
         this.radius = radius;
-        this.status = status != null ? status : "DONE";
         this.createdAt = LocalDateTime.now();
     }
 }

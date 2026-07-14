@@ -19,7 +19,6 @@ public class Point {
     @Column(nullable = false)
     private Integer delta;
 
-    @Column(length = 225)
     private String reason;
 
     @Column(nullable = false)
@@ -30,10 +29,10 @@ public class Point {
     private User user;
 
     @Builder
-    public Point(User user, Integer delta, String reason, LocalDateTime createdAt) {
+    public Point(User user, Integer delta, String reason) {
         this.user = user;
         this.delta = delta;
         this.reason = reason;
-        this.createdAt = createdAt != null ? createdAt : LocalDateTime.now(); // 기본값 설정
+        this.createdAt = LocalDateTime.now();
     }
 }

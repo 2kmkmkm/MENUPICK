@@ -10,7 +10,7 @@ public class RecommendationDTO {
     @Getter
     public static class SearchRequest {
         private String location;
-        private List<String> menus;
+        private List<String> menu;
         private Integer party;
     }
 
@@ -28,17 +28,17 @@ public class RecommendationDTO {
     public static class SearchResultInfo {
         // [restaurant] 테이블에서 가져오는 식당 고유 정보
         private Long restaurantId;
-        private String restaurantName;
-        private String restaurantAddress;
+        private String name;
+        private String address;
 
         // [recommendation_restaurant] 매핑 테이블에서 가져오는 AI 추천 정보
         private Integer rankNo;
         private String reason;
-        private List<String> quotes;
+        private List<String> quote;
         private Integer evidenceCount;
 
         // 서비스 비즈니스 로직으로 채워지는 필드들
-        private List<String> menus;
-        private boolean isScraped;
+        private List<String> menu;
+        private Boolean isScraped;
     }
 }
