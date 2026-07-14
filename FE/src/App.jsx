@@ -7,6 +7,7 @@ import Result from './Pages/Result';
 import Scraps from './Pages/Scraps';
 import History from './Pages/History';
 import PointHistory from './Pages/PointHistory';
+import ProtectedRoute from './Components/ProtectedRoute';
 
 function App() {
   return (
@@ -15,12 +16,55 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/loading" element={<Loading />} />
-        <Route path="/result" element={<Result />} />
-        <Route path="/scraps" element={<Scraps />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/points" element={<PointHistory />} />
+
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              <Search />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/loading"
+          element={
+            <ProtectedRoute>
+              <Loading />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/result"
+          element={
+            <ProtectedRoute>
+              <Result />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/scraps"
+          element={
+            <ProtectedRoute>
+              <Scraps />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <History />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/points"
+          element={
+            <ProtectedRoute>
+              <PointHistory />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
