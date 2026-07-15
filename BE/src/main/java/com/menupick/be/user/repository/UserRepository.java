@@ -10,4 +10,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 이메일 중복 여부 확인
     boolean existsByEmail(String email);
+
+    //  암호화된 리프레시 토큰으로 유저 찾기
+    Optional<User> findByHashedRefreshToken(String hashedRefreshToken);
 }

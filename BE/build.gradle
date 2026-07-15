@@ -64,3 +64,18 @@ dependencyManagement {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.named('bootRun') {
+    def envFile = file("${projectDir}/.env")
+
+    if (envFile.exists()) {
+        envFile.eachLine { line ->
+            if (!line.trim().startsWith("#") && line.contains("=")) {
+                def parts = line.split("=", 2)
+                def key = parts[0].trim()
+                def value = parts[1].trim()
+                environment key, value
+            }
+        }
+    }
+}

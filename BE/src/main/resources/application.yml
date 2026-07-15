@@ -36,7 +36,6 @@ spring:
       chat:
         model: gpt-4o-mini
 
-
 menupick:
   cors:
     allowed-origin: http://localhost:5173
