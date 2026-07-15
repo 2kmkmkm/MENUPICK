@@ -3,7 +3,7 @@ package com.menupick.be.user.dto;
 import lombok.Builder;
 import lombok.Getter;
 
-class UserDTO {
+public class UserDTO {
     @Getter
     public static class SignUpRequest {
         private String email;

@@ -44,7 +44,7 @@ public class Scrap {
     private boolean visited;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -55,16 +55,24 @@ public class Scrap {
     private Restaurant restaurant;
 
     @Builder
-    public Scrap(User user, Restaurant restaurant, String name, String address,
-                 List<String> menu, String memo, Integer rating) {
+    public Scrap(User user, Restaurant restaurant, String name, String address, List<String> menu) {
         this.user = user;
         this.restaurant = restaurant;
         this.name = name;
         this.address = address;
-        this.menu = (menu != null) ? menu : new ArrayList<>();
+        this.menu = menu;
+    }
+
+
+    public void updateMemo(String memo) {
         this.memo = memo;
+    }
+
+    public void updateRating(Integer rating) {
         this.rating = rating;
-        this.visited = false;
-        this.createdAt = LocalDateTime.now();
+    }
+
+    public void updateVisited(boolean visited) {
+        this.visited = visited;
     }
 }

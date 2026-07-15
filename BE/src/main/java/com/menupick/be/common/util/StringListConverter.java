@@ -16,11 +16,10 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
     @Override
     public String convertToDatabaseColumn(List<String> attribute) {
         if (attribute == null || attribute.isEmpty()) {
-            return null;
+            return "[]";
         }
 
         try {
-            // List를 JSON String 형태(예: ["치킨","피자,햄버거"])로 변환
             return objectMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("리스트를 JSON 문자열로 변환하는 데 실패했습니다.", e);
@@ -29,8 +28,8 @@ public class StringListConverter implements AttributeConverter<List<String>, Str
 
     @Override
     public List<String> convertToEntityAttribute(String dbData) {
-        if (dbData == null || dbData.isBlank()) {
-            return Arrays.asList();
+        if (dbData == null || dbData.isBlank() || "[]".equals(dbData)) {
+            return List.of();
         }
 
         try {

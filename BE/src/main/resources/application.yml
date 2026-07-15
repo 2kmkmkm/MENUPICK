@@ -50,7 +50,6 @@ menupick:
 
   ai: ${MENUPICK_AI:mock}
 
-
 logging:
   level:
     org.hibernate.SQL: debug
