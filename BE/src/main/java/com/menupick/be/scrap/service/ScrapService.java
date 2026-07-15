@@ -4,6 +4,8 @@ import com.menupick.be.Restaurant.entity.Restaurant;
 import com.menupick.be.Restaurant.repository.RestaurantRepository;
 import com.menupick.be.common.exception.ApiException;
 import com.menupick.be.common.exception.ErrorCode;
+import com.menupick.be.point.entity.PointType;
+import com.menupick.be.point.service.PointService;
 import com.menupick.be.scrap.dto.ScrapDTO;
 import com.menupick.be.scrap.dto.ScrapDTO.ReviewInfo;
 import com.menupick.be.scrap.dto.ScrapDTO.ScrapInfo;
@@ -27,7 +29,9 @@ public class ScrapService {
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
     private final ScrapRepository scrapRepository;
+    private final PointService pointService;
 
+    // 스크랩 등록/삭제
     @Transactional
     public ScrapValue toggle(String email, Long restaurantId) {
         User user = userRepository.findByEmail(email)
@@ -55,6 +59,8 @@ public class ScrapService {
         }
     }
 
+    // 스크랩한 맛집 리스트 조회
+    @Transactional
     public ScrapListResponse list(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND, "해당 이메일의 유저를 찾을 수 없습니다: " + email));
 
@@ -67,6 +73,7 @@ public class ScrapService {
         return new ScrapListResponse(infoList);
     }
 
+    // 리뷰 등록
     @Transactional
     public ScrapInfo updateReview(String email, ReviewInfo request, Long restaurantId) {
         User user = userRepository.findByEmail(email)
@@ -75,13 +82,20 @@ public class ScrapService {
         Scrap scrap = scrapRepository.findByUserIdAndRestaurantId(user.getId(), restaurantId)
                 .orElseThrow(() -> new ApiException(ErrorCode.SCRAP_NOT_FOUND));
 
+        boolean wasVisitedBefore = scrap.isVisited();
+
         if (request.getMemo() != null) {
             scrap.updateMemo(request.getMemo());
         }
         if (request.getRating() != null) {
             scrap.updateRating(request.getRating());
         }
+
         scrap.updateVisited(true);
+
+        if (!wasVisitedBefore) {
+            pointService.savePointTx(user, PointType.REVIEW_CREATE);
+        }
 
         return toScrapInfo(scrap);
     }

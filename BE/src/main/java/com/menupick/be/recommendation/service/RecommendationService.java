@@ -7,6 +7,8 @@ import com.menupick.be.ai.RecoResult;
 import com.menupick.be.common.exception.ApiException;
 import com.menupick.be.common.exception.ErrorCode;
 import com.menupick.be.common.util.GeoUtil;
+import com.menupick.be.point.entity.PointType;
+import com.menupick.be.point.service.PointService;
 import com.menupick.be.recommendation.entity.Recommendation;
 import com.menupick.be.recommendedPlace.dto.RecommendedPlaceDTO.OnHoldResponse;
 import com.menupick.be.recommendedPlace.dto.RecommendedPlaceDTO.RecoResultResponse;
@@ -34,6 +36,7 @@ public class RecommendationService {
     private final RecommendationRepository recommendationRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
+    private final PointService pointService;
     private final AiService aiService;
     private final ScrapService scrapService;
 
@@ -101,10 +104,13 @@ public class RecommendationService {
                         held.restaurant().getLat(), held.restaurant().getLng(), scrapedIds.contains(held.restaurant().getId())))
                 .toList();
 
+        pointService.savePointTx(user, PointType.AI_RECOMMENDATION);
+
         return new SearchResponse(
                 saved.getId(), menus, saved.getCreatedAt(), recommendations, onHold);
     }
 
+    // 검색 기록 조회
     @Transactional(readOnly = true)
     public List<HistoryResponse> history(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND, "해당 이메일의 유저를 찾을 수 없습니다: " + email));

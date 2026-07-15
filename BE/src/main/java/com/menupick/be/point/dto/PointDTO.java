@@ -1,7 +1,9 @@
 package com.menupick.be.point.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +11,8 @@ public class PointDTO {
     // 1. 적립/차감된 포인트 내역 조회
     @Getter
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class PointListResponse {
         private Long pointId;
         private String reason;
@@ -19,6 +23,8 @@ public class PointDTO {
     // 2. 현재 포인트 조회
     @Getter
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class PointResponse {
         private Integer point;
     }

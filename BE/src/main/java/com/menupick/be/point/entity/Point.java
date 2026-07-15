@@ -4,11 +4,13 @@ import com.menupick.be.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @Table(name = "point_tx")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Point {

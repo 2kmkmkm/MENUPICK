@@ -3,6 +3,9 @@ package com.menupick.be.user.service;
 import com.menupick.be.common.exception.ApiException;
 import com.menupick.be.common.exception.ErrorCode;
 import com.menupick.be.common.util.JwtTokenProvider;
+import com.menupick.be.point.entity.Point;
+import com.menupick.be.point.repository.PointRepository;
+import com.menupick.be.point.service.PointService;
 import com.menupick.be.user.dto.UserDTO;
 import com.menupick.be.user.dto.UserDTO.LoginRequest;
 import com.menupick.be.user.dto.UserDTO.LoginResponse;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PointRepository pointRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -37,7 +41,14 @@ public class UserService {
                 .name(request.getName())
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        Point welcomePoint = Point.builder().user(savedUser)
+                .delta(12)
+                .reason("신규 가입 축하 포인트")
+                .build();
+
+        pointRepository.save(welcomePoint);
     }
 
     // 로그인
