@@ -29,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class SeedData implements CommandLineRunner {
-
-    private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
-    private final PasswordEncoder passwordEncoder;
 
     // 1. 애플리케이션 실행 시 초기 데이터 세팅
     @Override
@@ -42,7 +39,7 @@ public class SeedData implements CommandLineRunner {
     }
 
     private void seedRestaurants() {
-        System.out.print(">>>> seedRestaurant 실행");
+        System.out.println(">>>> seedRestaurant 실행");
 
         if (restaurantRepository.count() > 0) {
             System.out.println("이미 DB에 데이터가 존재하여 시딩을 건너뜁니다.");
