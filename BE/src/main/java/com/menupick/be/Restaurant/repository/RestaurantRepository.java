@@ -6,11 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     @Query("select distinct r from Restaurant r left join fetch r.signals where r.isActive = true")
     List<Restaurant> findAllActiveWithSignals();
+
+    Optional<Restaurant> findFirstByIsActiveTrueAndNameNorm(String nameNorm);
 }
 

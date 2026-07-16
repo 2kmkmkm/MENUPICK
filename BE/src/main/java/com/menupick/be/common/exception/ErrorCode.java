@@ -34,6 +34,15 @@ public enum ErrorCode {
     VOTE_CLOSED(HttpStatus.BAD_REQUEST, 400, "마감된 투표입니다. 결과를 확인해주세요."),
     INVALID_VOTE_CANDIDATE(HttpStatus.BAD_REQUEST, 400, "이 투표의 후보가 아닙니다."),
 
+    // Contribution(제보) 도메인 전용 에러
+    DUPLICATE_RESTAURANT(HttpStatus.CONFLICT, 409, "이미 등록된 가게입니다. 검색해서 리뷰로 제보해주세요."),
+    ALREADY_REVIEWED(HttpStatus.CONFLICT, 409, "이 가게에는 이미 리뷰를 제보하셨습니다."),
+    INVALID_PLACE_URL(HttpStatus.BAD_REQUEST, 400, "원문 링크는 http(s) 주소만 허용됩니다."),
+
+    // Geocode 도메인 전용 에러
+    GEOCODE_NO_RESULT(HttpStatus.NOT_FOUND, 404, "검색 결과가 없습니다. 다른 검색어로 시도해주세요."),
+    GEOCODE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "지오코딩 요청에 실패했습니다."),
+
     // 토큰 에러
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 401, "유효하지 않은 토큰입니다."),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 401, "만료된 토큰입니다. 다시 로그인해 주세요.");

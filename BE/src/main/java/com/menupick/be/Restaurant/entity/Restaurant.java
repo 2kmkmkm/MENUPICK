@@ -30,6 +30,8 @@ public class Restaurant {
     private Double lng;
 
     private String placeId;
+
+    @Setter
     private String placeUrl;
 
     @Column(nullable = false)
