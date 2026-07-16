@@ -44,6 +44,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**", "/auth/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers("/shared/**").permitAll() // 공유 투표 — 링크만 알면 비로그인 조회·투표
+
                         .anyRequest().authenticated()
                 )
 

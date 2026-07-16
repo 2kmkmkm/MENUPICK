@@ -29,6 +29,11 @@ public enum ErrorCode {
     AI_RECOMMEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "AI 추천 서비스 구동에 실패했습니다."),
     NO_RESTAURANTS_NEARBY(HttpStatus.NOT_FOUND, 404, "반경 내에 조건에 맞는 맛집이 없습니다."),
 
+    // Share(공유 투표) 도메인 전용 에러
+    SHARE_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "존재하지 않는 공유 링크입니다."),
+    VOTE_CLOSED(HttpStatus.BAD_REQUEST, 400, "마감된 투표입니다. 결과를 확인해주세요."),
+    INVALID_VOTE_CANDIDATE(HttpStatus.BAD_REQUEST, 400, "이 투표의 후보가 아닙니다."),
+
     // 토큰 에러
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 401, "유효하지 않은 토큰입니다."),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 401, "만료된 토큰입니다. 다시 로그인해 주세요.");
