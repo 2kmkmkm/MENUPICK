@@ -90,6 +90,9 @@ public class ScrapService {
         if (request.getRating() != null) {
             scrap.updateRating(request.getRating());
         }
+        if (request.getTags() != null) {
+            scrap.updateTags(request.getTags());
+        }
 
         scrap.updateVisited(true);
 
@@ -97,6 +100,19 @@ public class ScrapService {
             pointService.savePointTx(user, PointType.REVIEW_CREATE);
         }
 
+        return toScrapInfo(scrap);
+    }
+
+    // 방문 체크/취소 — 체크 시각을 기록해 '내 기록' 타임라인의 기준으로 쓴다
+    @Transactional
+    public ScrapInfo updateVisited(String email, Long restaurantId, boolean visited) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+
+        Scrap scrap = scrapRepository.findByUserIdAndRestaurantId(user.getId(), restaurantId)
+                .orElseThrow(() -> new ApiException(ErrorCode.SCRAP_NOT_FOUND));
+
+        scrap.updateVisited(visited);
         return toScrapInfo(scrap);
     }
 
@@ -112,7 +128,9 @@ public class ScrapService {
                 .address(scrap.getAddress())
                 .memo(scrap.getMemo())
                 .rating(scrap.getRating())
+                .tags(scrap.getTags())
                 .visited(scrap.isVisited())
+                .visitedAt(scrap.getVisitedAt())
                 .build();
     }
 }

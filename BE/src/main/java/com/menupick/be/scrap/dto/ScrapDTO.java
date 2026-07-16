@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ScrapDTO {
@@ -37,7 +38,9 @@ public class ScrapDTO {
         private String address;
         private String memo;
         private Integer rating;
+        private String tags;
         private boolean visited;
+        private LocalDateTime visitedAt;
     }
 
     // 3. 리뷰/평점 작성 및 수정 (프론트 -> 백엔드)
@@ -48,5 +51,15 @@ public class ScrapDTO {
     public static class ReviewInfo {
         private String memo;
         private Integer rating;
+        private String tags; // 콤마 구분 방문 태그
+    }
+
+    // 4. 방문 체크/취소 (프론트 -> 백엔드)
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class VisitInfo {
+        private Boolean visited;
     }
 }

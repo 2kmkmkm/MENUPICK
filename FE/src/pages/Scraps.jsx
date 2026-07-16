@@ -44,6 +44,11 @@ function ScrapRow({ scrap, editing, onPatch, onDelete, onStartRecord, onComplete
     onComplete?.(scrap.scrapId, recorded)
   }
 
+  const toggleTag = (tag) => {
+    const next = tags.includes(tag) ? tags.filter((t) => t !== tag) : [...tags, tag]
+    onPatch(scrap.scrapId, { tags: next.join(',') })
+  }
+
   return (
     <article className={highlight ? 'scrap-card hl' : 'scrap-card'}>
       <div className="scrap-head">
@@ -81,6 +86,19 @@ function ScrapRow({ scrap, editing, onPatch, onDelete, onStartRecord, onComplete
             value={scrap.rating}
             onChange={(rating) => onPatch(scrap.scrapId, { rating })}
           />
+
+          <div className="vtags">
+            {TAGS.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                className={tags.includes(tag) ? 'vtag on' : 'vtag'}
+                onClick={() => toggleTag(tag)}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
 
           <textarea
             className="memo-input"
@@ -147,8 +165,8 @@ export default function Scraps() {
           memo: r.memo,
           rating: r.rating,
           visited: r.visited,
-          tags: '',
-          visitedAt: null,
+          tags: r.tags ?? '',
+          visitedAt: r.visitedAt ?? null,
         }))
         if (alive) setScraps(rows)
       })
@@ -178,24 +196,39 @@ export default function Scraps() {
 
   const patch = async (id, body) => {
     setError('')
-    // 방문 체크/취소는 로컬 상태 — 서버에는 리뷰(별점·메모) 저장 시점에 반영된다.
+    // 방문 체크/취소 — 서버에 반영하고 visitedAt(타임라인 기준)을 받아온다.
     if ('visited' in body) {
-      setScraps((prev) => prev.map((s) => (s.scrapId === id ? { ...s, visited: body.visited } : s)))
-      if (body.visited === true) addActive(id)
-      if (body.visited === false) dropActive(id)
+      try {
+        const { data } = await api.put(`/scraps/visit/${id}`, { visited: body.visited })
+        setScraps((prev) => prev.map((s) => (
+          s.scrapId === id ? { ...s, visited: data?.visited ?? body.visited, visitedAt: data?.visitedAt ?? null } : s
+        )))
+        if (body.visited === true) addActive(id)
+        if (body.visited === false) dropActive(id)
+      } catch {
+        setError('변경 사항을 저장하지 못했어요.')
+      }
       return
     }
-    // 별점/메모 — 서버는 둘을 함께 받으므로 현재 값과 병합해 보낸다.
+    // 별점/메모/태그 — 서버는 함께 받으므로 현재 값과 병합해 보낸다.
     const current = scraps.find((s) => s.scrapId === id)
     const payload = {
       memo: body.memo ?? current?.memo ?? '',
       rating: body.rating ?? current?.rating ?? null,
+      tags: body.tags ?? current?.tags ?? '',
     }
     try {
       const { data } = await api.put(`/scraps/review/${id}`, payload)
       setScraps((prev) => prev.map((s) => (
         s.scrapId === id
-          ? { ...s, memo: data?.memo ?? payload.memo, rating: data?.rating ?? payload.rating, visited: true }
+          ? {
+              ...s,
+              memo: data?.memo ?? payload.memo,
+              rating: data?.rating ?? payload.rating,
+              tags: data?.tags ?? payload.tags,
+              visited: true,
+              visitedAt: data?.visitedAt ?? s.visitedAt,
+            }
           : s
       )))
       // 헤더 포인트 동기화 — 리뷰 보상 정책이 붙으면 여기서 자동 반영된다.
