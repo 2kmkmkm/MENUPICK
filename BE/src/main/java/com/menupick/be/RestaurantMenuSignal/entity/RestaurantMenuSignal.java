@@ -39,4 +39,13 @@ public class RestaurantMenuSignal {
         this.mentionCount = mentionCount;
         this.snippet = snippet;
     }
+
+    /** 사용자 제보 신호 — sourceLink("user:{id}")와 userContributed 로 크롤 신호와 구분한다. */
+    public RestaurantMenuSignal(String menu, int mentionCount, String snippet, String sourceLink) {
+        this.menu = menu;
+        this.mentionCount = mentionCount;
+        this.snippet = snippet;
+        this.sourceLink = sourceLink;
+        this.userContributed = true;
+    }
 }
