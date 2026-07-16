@@ -29,6 +29,11 @@ public enum ErrorCode {
     AI_RECOMMEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 500, "AI 추천 서비스 구동에 실패했습니다."),
     NO_RESTAURANTS_NEARBY(HttpStatus.NOT_FOUND, 404, "반경 내에 조건에 맞는 맛집이 없습니다."),
 
+    // Share(공유 투표) 도메인 전용 에러
+    SHARE_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "존재하지 않는 공유 링크입니다."),
+    VOTE_CLOSED(HttpStatus.BAD_REQUEST, 400, "마감된 투표입니다. 결과를 확인해주세요."),
+    INVALID_VOTE_CANDIDATE(HttpStatus.BAD_REQUEST, 400, "이 투표의 후보가 아닙니다."),
+
     // Contribution(제보) 도메인 전용 에러
     DUPLICATE_RESTAURANT(HttpStatus.CONFLICT, 409, "이미 등록된 가게입니다. 검색해서 리뷰로 제보해주세요."),
     ALREADY_REVIEWED(HttpStatus.CONFLICT, 409, "이 가게에는 이미 리뷰를 제보하셨습니다."),
