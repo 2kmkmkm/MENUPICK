@@ -40,8 +40,14 @@ public class Scrap {
     @Max(5)
     private Integer rating;
 
+    /** 원탭 방문 태그 — 콤마 구분 문자열(예: "또 올 맛,가성비"). */
+    private String tags;
+
     @Column(nullable = false)
     private boolean visited;
+
+    /** 방문 체크 시각 — 내 기록 타임라인의 월별 그룹 기준. */
+    private LocalDateTime visitedAt;
 
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -74,5 +80,14 @@ public class Scrap {
 
     public void updateVisited(boolean visited) {
         this.visited = visited;
+        if (visited) {
+            if (this.visitedAt == null) this.visitedAt = LocalDateTime.now();
+        } else {
+            this.visitedAt = null;
+        }
+    }
+
+    public void updateTags(String tags) {
+        this.tags = tags;
     }
 }

@@ -5,6 +5,7 @@ import com.menupick.be.scrap.dto.ScrapDTO.ReviewInfo;
 import com.menupick.be.scrap.dto.ScrapDTO.ScrapInfo;
 import com.menupick.be.scrap.dto.ScrapDTO.ScrapListResponse;
 import com.menupick.be.scrap.dto.ScrapDTO.ScrapValue;
+import com.menupick.be.scrap.dto.ScrapDTO.VisitInfo;
 import com.menupick.be.scrap.service.ScrapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,15 @@ public class ScrapController {
         ScrapListResponse response = scrapService.list(userDetails.getUsername());
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(200, "스크랩한 맛집 불러오기에 성공했습니다.", response));
+    }
+
+    // 방문 체크/취소
+    @PutMapping("/visit/{restaurantId}")
+    public ResponseEntity<ApiResponse<ScrapInfo>> updateVisited(@PathVariable Long restaurantId, @RequestBody VisitInfo request, @AuthenticationPrincipal UserDetails userDetails) {
+        boolean visited = request.getVisited() != null && request.getVisited();
+        ScrapInfo response = scrapService.updateVisited(userDetails.getUsername(), restaurantId, visited);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(200, "방문 상태가 변경되었습니다.", response));
     }
 
     @PutMapping("/review/{restaurantId}")
