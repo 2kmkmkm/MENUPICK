@@ -23,4 +23,15 @@ public interface RecommendationRepository extends JpaRepository<Recommendation, 
             + "left join fetch p.restaurant "
             + "where rec.id = :id")
     Optional<Recommendation> findByIdWithPlaces(@Param("id") Long id);
+
+    /** 같은 사용자·같은 지점(좌표·반경)의 최근 추천 — 10분 캐시 후보. 메뉴 일치는 서비스에서 비교한다. */
+    @Query("select rec from Recommendation rec "
+            + "where rec.user.id = :userId and rec.lat = :lat and rec.lng = :lng "
+            + "and rec.radius = :radius and rec.createdAt > :after "
+            + "order by rec.createdAt desc")
+    List<Recommendation> findRecentByUserAndSpot(@Param("userId") Long userId,
+                                                 @Param("lat") Double lat,
+                                                 @Param("lng") Double lng,
+                                                 @Param("radius") Integer radius,
+                                                 @Param("after") java.time.LocalDateTime after);
 }

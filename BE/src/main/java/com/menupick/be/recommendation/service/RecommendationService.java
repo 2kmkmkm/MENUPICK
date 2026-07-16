@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +42,7 @@ public class RecommendationService {
     private final ScrapService scrapService;
 
     private static final int GROUP_THRESHOLD = 5; // 5인 이상이면 단체 가능 매장 필터링
+    private static final int CACHE_MINUTES = 10;  // 같은 조건 재검색은 10분간 포인트 미차감(캐시)
 
     // AI 기반 맛집 추천
     @Transactional
@@ -53,6 +55,19 @@ public class RecommendationService {
         Double lat = request.getLat();
         Double lng = request.getLng();
         String address = request.getAddress();
+        List<String> menus = request.menuList();
+
+        // 1.5. 10분 캐시 — 같은 사용자·같은 조건(좌표·반경·메뉴) 재검색이면
+        //      AI 호출과 포인트 차감 없이 직전 결과를 그대로 반환한다.
+        LocalDateTime cacheCutoff = LocalDateTime.now().minusMinutes(CACHE_MINUTES);
+        Recommendation cachedRec = recommendationRepository
+                .findRecentByUserAndSpot(user.getId(), lat, lng, radius, cacheCutoff).stream()
+                .filter(rec -> rec.getMenu().equals(menus))
+                .findFirst()
+                .orElse(null);
+        if (cachedRec != null) {
+            return getForUser(user.getId(), cachedRec.getId());
+        }
 
         // 2. 반경 내 활성화된 맛집 후보군 필터링
         List<Restaurant> candidates = restaurantRepository.findAllActiveWithSignals().stream()
@@ -75,7 +90,6 @@ public class RecommendationService {
         }
 
         // 4. 선택된 메뉴 키워드들을 기반으로 OpenAI API 커스텀 서비스 호출
-        List<String> menus = request.menuList();
         RecoResult result = aiService.recommend(menus, candidates);
 
         // 5. DB에 추천 이력 원본 데이터 저장
