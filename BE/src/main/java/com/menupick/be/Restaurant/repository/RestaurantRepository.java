@@ -15,5 +15,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findAllActiveWithSignals();
 
     Optional<Restaurant> findFirstByIsActiveTrueAndNameNorm(String nameNorm);
+
+    List<Restaurant> findTop5ByIsActiveTrueAndNameNormContaining(String nameNorm);
 }
 
