@@ -1,0 +1,81 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.0.7'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.menupick'
+version = '0.0.1-SNAPSHOT'
+description = 'BE'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springAiVersion', "2.0.0")
+}
+
+dependencies {
+    // API 문서화
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3'
+
+    // 스프링 부트 스타터
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Spring AI
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // DB 드라이버
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.springframework.boot:spring-boot-h2console'
+
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    // 테스트 의존성
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('bootRun') {
+    def envFile = file("${projectDir}/.env")
+
+    if (envFile.exists()) {
+        envFile.eachLine { line ->
+            if (!line.trim().startsWith("#") && line.contains("=")) {
+                def parts = line.split("=", 2)
+                def key = parts[0].trim()
+                def value = parts[1].trim()
+                environment key, value
+            }
+        }
+    }
+}
